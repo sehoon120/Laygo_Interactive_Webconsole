@@ -1,0 +1,18 @@
+[INFO] 실행 중: /WORK/laygo_web_console/Implementation_linux/temp_code/jeyunp_dff_temp.py
+[DEBUG] 현재실행경로: 
+/WORK/laygo_web_console/Implementation_linux/server
+USERNAME: jeyunp
+FILENAME: dff
+RUNDIR: /WORK/laygo_web_console/Implementation_linux/server
+CODE_PATH: /WORK/laygo_web_console/Implementation_linux/temp_code/jeyunp_dff_temp.py
+Load templates
+webconsole mode
+/templates/test_big_templates.yaml
+Load grids
+--------------------
+Now Creating dff_2x
+Create instances
+Create wires
+Export design
+
+webconsole mode

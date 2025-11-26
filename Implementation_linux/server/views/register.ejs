@@ -1,0 +1,101 @@
+<%- include('./include/_header_home') %>
+
+<!-- Main -->
+<main id="site-main">
+
+  <h3>사용자 등록</h3>
+
+  <form class="register" method="POST" action="/register">
+    <label for="username"><b>아이디</b></label>
+    <input type="text" placeholder="아이디" name="username" id="username">
+    <label for="password"><b>비밀번호</b></label>
+    <input type="password" placeholder="비밀번호" name="password" id="password">
+    <label for="password2"><b>비밀번호 확인</b></label>
+    <input type="password" placeholder="비밀번호 확인" name="password2" id="password2">
+
+    <!-- 메일 주소 입력 및 인증 버튼 -->
+    <label for="email"><b>메일 주소</b></label>
+    <div class="email-verification" style="display: flex; gap: 10px; align-items: center;">
+      <input type="text" placeholder="메일 주소" name="email" id="email" style="flex: 1;">
+      <button type="button" id="sendEmailButton" class="btn btn-primary verify-btn">인증</button>
+    </div>
+
+    <!-- 인증번호 입력 및 확인 버튼 -->
+    <label for="verificationCode"><b>인증번호</b></label>
+    <div class="code-confirmation" style="display: flex; gap: 10px; align-items: center;">
+      <input type="text" placeholder="인증번호 입력" name="verificationCode" id="verificationCode" style="flex: 1;">
+      <button type="button" id="verifyEmailButton" class="btn btn-secondary verify-btn">확인</button>
+    </div>
+
+    <!-- 알림 메시지 출력 영역 -->
+    <div id="messageBox" style="margin-top: 15px; font-weight: bold;"></div>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div class="alert alert-warning" role="alert" style="margin-top:10px;">
+        <%= error %>
+      </div>
+    <% } %>
+
+
+    <input type="submit" value="등록" class="register-btn">
+  </form>    
+
+  <script>
+    const messageBox = document.getElementById('messageBox');
+
+    function showMessage(text, isSuccess = true) {
+      messageBox.textContent = text;
+      messageBox.style.color = isSuccess ? 'green' : 'red';
+    }
+
+    // 인증 메일 전송 요청
+    document.getElementById('sendEmailButton').addEventListener('click', async () => {
+      const email = document.getElementById('email').value;
+      try {
+        const response = await fetch('/sendVerificationEmail', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+        if (response.ok) {
+          showMessage('인증 메일이 전송되었습니다. 메일함을 확인하세요.', true);
+        } else {
+          showMessage(data.message || '메일 전송 실패', false);
+        }
+      } catch (err) {
+        console.error('인증 메일 전송 실패:', err);
+        showMessage('메일 전송 중 오류가 발생했습니다.', false);
+      }
+    });
+
+    // 인증 코드 확인 요청
+    document.getElementById('verifyEmailButton').addEventListener('click', async () => {
+      const email = document.getElementById('email').value;
+      const code = document.getElementById('verificationCode').value;
+      try {
+        const response = await fetch('/verifyEmailCode', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, code })
+        });
+
+        const text = await response.text();
+        let data;
+        try { data = JSON.parse(text); } catch { data = { message: text }; }
+
+        if (response.ok) {
+          showMessage('이메일 인증이 완료되었습니다!', true);
+        } else {
+          showMessage('인증 실패', false);
+        }
+      } catch (err) {
+        console.error('인증 코드 확인 실패:', err);
+        showMessage('인증 확인 중 오류가 발생했습니다.', false);
+      }
+    });
+  </script>
+</main>
+<!-- /Main -->
+
+<%- include('./include/_footer') %>

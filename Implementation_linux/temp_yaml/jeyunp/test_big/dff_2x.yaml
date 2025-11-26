@@ -1,0 +1,528 @@
+bbox:
+- [0, 0]
+- [9020, 2000]
+cellname: dff_2x
+flatten:
+  metals: []
+  subblocks: []
+  vias: []
+libname: test_big
+metals:
+- layer: Metal3
+  xy:
+  - [1190, 160]
+  - [1270, 640]
+- layer: Metal3
+  xy:
+  - [2420, 160]
+  - [2500, 840]
+- layer: Metal3
+  xy:
+  - [6725, 160]
+  - [6805, 840]
+- layer: Metal3
+  xy:
+  - [4060, 160]
+  - [4140, 840]
+- layer: Metal3
+  xy:
+  - [7340, 160]
+  - [7420, 840]
+- layer: Metal4
+  xy:
+  - [1190, 160]
+  - [7420, 240]
+- layer: Metal3
+  xy:
+  - [370, 360]
+  - [450, 640]
+- layer: Metal3
+  xy:
+  - [985, 360]
+  - [1065, 840]
+- layer: Metal3
+  xy:
+  - [3035, 360]
+  - [3115, 840]
+- layer: Metal3
+  xy:
+  - [6110, 360]
+  - [6190, 840]
+- layer: Metal3
+  xy:
+  - [3650, 360]
+  - [3730, 840]
+- layer: Metal3
+  xy:
+  - [7750, 360]
+  - [7830, 840]
+- layer: Metal4
+  xy:
+  - [370, 360]
+  - [7830, 440]
+- layer: Metal3
+  xy:
+  - [4675, 560]
+  - [4755, 840]
+- layer: Metal3
+  xy:
+  - [2830, 360]
+  - [2910, 640]
+- layer: Metal3
+  xy:
+  - [3855, 360]
+  - [3935, 640]
+- layer: Metal4
+  xy:
+  - [2830, 560]
+  - [4755, 640]
+- layer: Metal3
+  xy:
+  - [8365, 560]
+  - [8445, 840]
+- layer: Metal3
+  xy:
+  - [6520, 360]
+  - [6600, 640]
+- layer: Metal3
+  xy:
+  - [7545, 360]
+  - [7625, 640]
+- layer: Metal4
+  xy:
+  - [6520, 560]
+  - [8445, 640]
+- layer: Metal3
+  xy:
+  - [4880, 560]
+  - [4960, 840]
+- layer: Metal4
+  xy:
+  - [3445, 760]
+  - [5780, 840]
+- layer: Metal3
+  xy:
+  - [8570, 560]
+  - [8650, 840]
+- layer: Metal4
+  xy:
+  - [7135, 760]
+  - [8650, 840]
+- layer: Metal2
+  xy:
+  - [-40, -120]
+  - [9060, 120]
+- layer: Metal2
+  xy:
+  - [-40, 1880]
+  - [9060, 2120]
+pins:
+- bbox:
+  - [2010, 790]
+  - [2090, 1210]
+  layer: Metal3
+  name: I
+  xy:
+  - [2010, 790]
+  - [2090, 1210]
+- bbox:
+  - [165, 790]
+  - [245, 1210]
+  layer: Metal3
+  name: CLK
+  xy:
+  - [165, 790]
+  - [245, 1210]
+- bbox:
+  - [8570, 490]
+  - [8650, 1510]
+  layer: Metal3
+  name: O
+  xy:
+  - [8570, 490]
+  - [8650, 1510]
+- bbox:
+  - [0, -120]
+  - [9020, 120]
+  layer: Metal2
+  name: VSS
+  xy:
+  - [0, -120]
+  - [9020, 120]
+- bbox:
+  - [0, 1880]
+  - [9020, 2120]
+  layer: Metal2
+  name: VDD
+  xy:
+  - [0, 1880]
+  - [9020, 2120]
+subblocks:
+- cellname: inv_2x
+  libname: test_big
+  name: inv0
+  pins:
+    I:
+      bbox:
+      - [165, 790]
+      - [245, 1210]
+      termName: I
+    O:
+      bbox:
+      - [370, 490]
+      - [450, 1510]
+      termName: O
+    'VDD:':
+      bbox:
+      - [0, 1880]
+      - [820, 2120]
+      termName: 'VDD:'
+    'VSS:':
+      bbox:
+      - [0, -120]
+      - [820, 120]
+      termName: 'VSS:'
+  size:
+  - [0, 0]
+  - [820, 2000]
+  transform: R0
+  xy: [0, 0]
+- cellname: inv_2x
+  libname: test_big
+  name: inv1
+  pins:
+    I:
+      bbox:
+      - [985, 790]
+      - [1065, 1210]
+      termName: I
+    O:
+      bbox:
+      - [1190, 490]
+      - [1270, 1510]
+      termName: O
+    'VDD:':
+      bbox:
+      - [820, 1880]
+      - [1640, 2120]
+      termName: 'VDD:'
+    'VSS:':
+      bbox:
+      - [820, -120]
+      - [1640, 120]
+      termName: 'VSS:'
+  size:
+  - [820, 0]
+  - [1640, 2000]
+  transform: R0
+  xy: [820, 0]
+- cellname: tinv_2x
+  libname: test_big
+  name: tinv0
+  pins:
+    EN:
+      bbox:
+      - [3035, 790]
+      - [3115, 1210]
+      termName: EN
+    ENB:
+      bbox:
+      - [2420, 790]
+      - [2500, 1210]
+      termName: ENB
+    I:
+      bbox:
+      - [2010, 790]
+      - [2090, 1210]
+      termName: I
+    O:
+      bbox:
+      - [2830, 340]
+      - [2910, 1660]
+      termName: O
+    'VDD:':
+      bbox:
+      - [1640, 1880]
+      - [3280, 2120]
+      termName: 'VDD:'
+    'VSS:':
+      bbox:
+      - [1640, -120]
+      - [3280, 120]
+      termName: 'VSS:'
+  size:
+  - [1640, 0]
+  - [3280, 2000]
+  transform: R0
+  xy: [1640, 0]
+- cellname: tinv_small_1x
+  libname: test_big
+  name: tinv_small0
+  pins:
+    EN:
+      bbox:
+      - [4060, 790]
+      - [4140, 1210]
+      termName: EN
+    ENB:
+      bbox:
+      - [3650, 790]
+      - [3730, 1210]
+      termName: ENB
+    I:
+      bbox:
+      - [3445, 790]
+      - [3525, 1210]
+      termName: I
+    O:
+      bbox:
+      - [3855, 340]
+      - [3935, 1660]
+      termName: O
+    'VDD:':
+      bbox:
+      - [3280, 1880]
+      - [4510, 2120]
+      termName: 'VDD:'
+    'VSS:':
+      bbox:
+      - [3280, -120]
+      - [4510, 120]
+      termName: 'VSS:'
+  size:
+  - [3280, 0]
+  - [4510, 2000]
+  transform: R0
+  xy: [3280, 0]
+- cellname: inv_2x
+  libname: test_big
+  name: inv2
+  pins:
+    I:
+      bbox:
+      - [4675, 790]
+      - [4755, 1210]
+      termName: I
+    O:
+      bbox:
+      - [4880, 490]
+      - [4960, 1510]
+      termName: O
+    'VDD:':
+      bbox:
+      - [4510, 1880]
+      - [5330, 2120]
+      termName: 'VDD:'
+    'VSS:':
+      bbox:
+      - [4510, -120]
+      - [5330, 120]
+      termName: 'VSS:'
+  size:
+  - [4510, 0]
+  - [5330, 2000]
+  transform: R0
+  xy: [4510, 0]
+- cellname: tinv_2x
+  libname: test_big
+  name: tinv1
+  pins:
+    EN:
+      bbox:
+      - [6725, 790]
+      - [6805, 1210]
+      termName: EN
+    ENB:
+      bbox:
+      - [6110, 790]
+      - [6190, 1210]
+      termName: ENB
+    I:
+      bbox:
+      - [5700, 790]
+      - [5780, 1210]
+      termName: I
+    O:
+      bbox:
+      - [6520, 340]
+      - [6600, 1660]
+      termName: O
+    'VDD:':
+      bbox:
+      - [5330, 1880]
+      - [6970, 2120]
+      termName: 'VDD:'
+    'VSS:':
+      bbox:
+      - [5330, -120]
+      - [6970, 120]
+      termName: 'VSS:'
+  size:
+  - [5330, 0]
+  - [6970, 2000]
+  transform: R0
+  xy: [5330, 0]
+- cellname: tinv_small_1x
+  libname: test_big
+  name: tinv_small1
+  pins:
+    EN:
+      bbox:
+      - [7750, 790]
+      - [7830, 1210]
+      termName: EN
+    ENB:
+      bbox:
+      - [7340, 790]
+      - [7420, 1210]
+      termName: ENB
+    I:
+      bbox:
+      - [7135, 790]
+      - [7215, 1210]
+      termName: I
+    O:
+      bbox:
+      - [7545, 340]
+      - [7625, 1660]
+      termName: O
+    'VDD:':
+      bbox:
+      - [6970, 1880]
+      - [8200, 2120]
+      termName: 'VDD:'
+    'VSS:':
+      bbox:
+      - [6970, -120]
+      - [8200, 120]
+      termName: 'VSS:'
+  size:
+  - [6970, 0]
+  - [8200, 2000]
+  transform: R0
+  xy: [6970, 0]
+- cellname: inv_2x
+  libname: test_big
+  name: inv3
+  pins:
+    I:
+      bbox:
+      - [8365, 790]
+      - [8445, 1210]
+      termName: I
+    O:
+      bbox:
+      - [8570, 490]
+      - [8650, 1510]
+      termName: O
+    'VDD:':
+      bbox:
+      - [8200, 1880]
+      - [9020, 2120]
+      termName: 'VDD:'
+    'VSS:':
+      bbox:
+      - [8200, -120]
+      - [9020, 120]
+      termName: 'VSS:'
+  size:
+  - [8200, 0]
+  - [9020, 2000]
+  transform: R0
+  xy: [8200, 0]
+vias:
+- bbox:
+  - [1190, 160]
+  - [1270, 240]
+  layer: [Metal4, Metal3]
+  xy: [1230, 200]
+- bbox:
+  - [2420, 160]
+  - [2500, 240]
+  layer: [Metal4, Metal3]
+  xy: [2460, 200]
+- bbox:
+  - [6725, 160]
+  - [6805, 240]
+  layer: [Metal4, Metal3]
+  xy: [6765, 200]
+- bbox:
+  - [4060, 160]
+  - [4140, 240]
+  layer: [Metal4, Metal3]
+  xy: [4100, 200]
+- bbox:
+  - [7340, 160]
+  - [7420, 240]
+  layer: [Metal4, Metal3]
+  xy: [7380, 200]
+- bbox:
+  - [370, 360]
+  - [450, 440]
+  layer: [Metal4, Metal3]
+  xy: [410, 400]
+- bbox:
+  - [985, 360]
+  - [1065, 440]
+  layer: [Metal4, Metal3]
+  xy: [1025, 400]
+- bbox:
+  - [3035, 360]
+  - [3115, 440]
+  layer: [Metal4, Metal3]
+  xy: [3075, 400]
+- bbox:
+  - [6110, 360]
+  - [6190, 440]
+  layer: [Metal4, Metal3]
+  xy: [6150, 400]
+- bbox:
+  - [3650, 360]
+  - [3730, 440]
+  layer: [Metal4, Metal3]
+  xy: [3690, 400]
+- bbox:
+  - [7750, 360]
+  - [7830, 440]
+  layer: [Metal4, Metal3]
+  xy: [7790, 400]
+- bbox:
+  - [4675, 560]
+  - [4755, 640]
+  layer: [Metal4, Metal3]
+  xy: [4715, 600]
+- bbox:
+  - [2830, 560]
+  - [2910, 640]
+  layer: [Metal4, Metal3]
+  xy: [2870, 600]
+- bbox:
+  - [3855, 560]
+  - [3935, 640]
+  layer: [Metal4, Metal3]
+  xy: [3895, 600]
+- bbox:
+  - [8365, 560]
+  - [8445, 640]
+  layer: [Metal4, Metal3]
+  xy: [8405, 600]
+- bbox:
+  - [6520, 560]
+  - [6600, 640]
+  layer: [Metal4, Metal3]
+  xy: [6560, 600]
+- bbox:
+  - [7545, 560]
+  - [7625, 640]
+  layer: [Metal4, Metal3]
+  xy: [7585, 600]
+- bbox:
+  - [4880, 760]
+  - [4960, 840]
+  layer: [Metal4, Metal3]
+  xy: [4920, 800]
+- bbox:
+  - [8570, 760]
+  - [8650, 840]
+  layer: [Metal4, Metal3]
+  xy: [8610, 800]

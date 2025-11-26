@@ -1,0 +1,266 @@
+; laygo2 layout export skill script.
+
+; laygo2 skill export script.
+; - Initial code from BAG_framework (https://github.com/ucb-art/BAG_framework).
+; - Users need to install CCSinvokeCdfCallbacks() from Cadence Online Support
+;   (support.cadence.com) to enable pcell export.
+;   (link: https://support.cadence.com/apex/ArticleAttachmentPortal?id=a1Od0000000namyEAA&pageName=ArticleContent)
+
+; create or reset a library
+procedure( _laygo2_reset_library(libname tech_libname "tt")
+    let( (lib_obj cell)
+        if( lib_obj = ddGetObj(libname nil nil nil nil "r") then
+            ; if the library exists, delete all cells in the library
+            foreach( cell lib_obj~>cells
+                unless( ddDeleteObj(cell)
+                    error("[LAYGO2] Cannot delete cell %s in library %s\n" cell~>name libname)
+                );unless
+            );foreach
+            ddReleaseObj(lib_obj)
+            't
+        else
+            ; create library if not exist
+            lib_obj = ddCreateLib(libname)
+            techBindTechFile(lib_obj tech_libname)  ; attach technology file
+            ddReleaseObj(lib_obj)  ; close library
+            't
+        );if
+    );let
+);procedure
+
+; create a new layout view and open it
+procedure( _laygo2_open_layout(libname cellname viewname "tt")
+    let( (cv)
+        ; open layout cellview
+        unless( cv = dbOpenCellViewByType( libname cellname viewname "maskLayout" "w" )
+            error("[LAYGO2] Cannot create a new layout cell %s__%s (%s)." libname cellname viewname)
+        ); unless
+        printf("Created a layout %s__%s (%s)\n" libname cellname viewname)
+    cv
+    );let
+);procedure
+
+; create a new layout view and open it
+procedure( _laygo2_save_and_close_layout(cv)
+    dbSave(cv)
+    dbClose(cv)
+);procedure
+
+; create an instance
+procedure( _laygo2_generate_instance( cv name libname cellname viewname loc orient num_rows num_cols sp_rows sp_cols
+                                      params params_order net_info_list)
+    let( (obj net_info netname termname netobj termobj)
+        if( inst_cv = dbOpenCellViewByType( libname cellname viewname nil "r" ) then  ; if the instance exists
+            if( and( num_rows==1 num_cols==1 ) then  ; create a single instance
+                if( params != nil then  ; for pcells
+                    obj = dbCreateParamInst(cv inst_cv name loc orient 1 params)
+                    when( obj
+                        if( params_order == nil then  ; if parameter order is not specified,
+                            params_order = mapcar( lambda( (x) car(x) ) params )
+                        );if
+                        ;abInvokeCdfCallbacks(obj ?order params_order)  ; run callback functions
+                        CCSinvokeInstCdfCallbacks(obj ?order params_order)  ; run callback functions
+                    );when
+                else  ; for vanilla cells
+                    obj = dbCreateInst(cv inst_cv name loc orient)
+                );if
+                if(net_info_list != nil then ; assign net information for XL connectivity
+                    foreach( net_info net_info_list 
+                        termname = nthelem(1 net_info)
+                        netname = nthelem(2 net_info)
+                        netobj = dbMakeNet( cv netname )
+                        termobj = car(setof(term obj~>master~>terminals term~>name == termname))
+                        ;display(obj~>master~>terminals~>??)
+                        ;printf("\n termname netname netobj %s %s %s \n\n" termname netname netobj)
+                        ;printf("\n termobj %s \n\n" termobj)
+                        ;printf("\n termname netname netobj %s %s %s \n\n" termname netname netobj termobj)
+                        if(termobj != nil then
+                            dbCreateInstTerm(netobj obj termobj)
+                        );if
+                    );foreach
+                );if
+            else  ; create an array instance
+                if( params != nil then  ; for pcells
+                    obj = dbCreateParamSimpleMosaic(cv inst_cv name loc orient num_rows num_cols sp_rows sp_cols params)
+                    when( obj
+                        if( params_order == nil then  ; if parameter order is not specified,
+                            params_order = mapcar( lambda( (x) car(x) ) params )
+                        );if
+                        ;abInvokeCdfCallbacks(obj ?order params_order)  ; run callback functions
+                        CCSinvokeInstCdfCallbacks(obj ?order params_order)  ; run callback functions
+                    );when
+                else  ; for vanilla cells
+                    obj = dbCreateSimpleMosaic(cv inst_cv name loc orient num_rows num_cols sp_rows sp_cols)
+                );if
+            );if
+            unless( obj
+                warn("[LAYGO2] Error creating an instance: %s of %s__%s (%s). Skipping." name libname cellname viewname)
+            );unless
+        else
+            warn("[LAYGO2] Cannot find the instance %s__%s (%s). Skipping." libname cellname viewname)
+        );if
+        obj
+    );let
+);procedure
+
+; create a rectangle
+procedure( _laygo2_generate_rect( cv layer bbox color net )
+    let( (obj netobj) 
+    obj = dbCreateRect(cv layer bbox)
+    ;obj = dbSetShapeColor(dbCreateRect(cv layer bbox) color) ; coloring func. added
+    if( color != "not MPT" then
+        dbSetShapeColor( obj color )
+        dbSetShapeColorLocked(obj t)
+    else )
+    if( net != "not assigned" then
+        rexCompile(":")
+        netname = rexReplace(net "" 0)
+        netobj = dbMakeNet( cv netname )
+        dbAddFigToNet( obj netobj )
+    else )
+    obj
+    );let
+);procedure
+
+; create an autovia
+procedure( _laygo2_generate_autovia( cv layer center cut color tech)
+    techFile = techGetTechFile(ddGetObj(tech))
+    constraintGroupId = cstFindConstraintGroupIn(techFile "virtuosoDefaultSetup")
+    ViaOptions = viaGetViaOptions(constraintGroupId)
+    ViaOptions -> automatic ~> cutClass = cut
+    viaGenerateViasAtPoint(cv center ViaOptions ?topAndBottomLayers layer)    
+);procedure
+
+; TODO: implement path creation function
+
+; create a pin
+procedure( _laygo2_generate_pin( cv name layer bbox)
+    let( (obj netname net pin_w pin_h pin_xc pin_yc)
+        pin_w = caadr(bbox) - caar(bbox)
+        pin_h = cadr(cadr(bbox)) - cadr(car(bbox))
+        pin_xc = (caar(bbox) + caadr(bbox)) / 2.0
+        pin_yc = (cadr(car(bbox)) + cadr(cadr(bbox))) / 2.0
+        if(pin_w == 0 then ;zero width
+            bbox = list(list((caar(bbox)-0.001) cadr(car(bbox))) list((caadr(bbox)+0.001) cadr(cadr(bbox))))
+            pin_w = 0.001
+        );if
+        if(pin_h == 0 then ;zero height
+            bbox = list(list(caar(bbox) (cadr(car(bbox))-0.001)) list(caadr(bbox) (cadr(cadr(bbox))+0.001)))
+            pin_h = 0.001
+        );if
+        ; create a rectangle and convert it to a pin.
+        obj = _laygo2_generate_rect( cv layer bbox "not MPT" name )
+        ; remove : from name for netname
+        rexCompile(":")
+        netname = rexReplace(name "" 0)
+        net = dbMakeNet(cv netname)
+        dbCreatePin(net obj)
+        ; create a label for the pin
+        if( pin_w >= pin_h then
+            obj=dbCreateLabel( cv layer list(pin_xc pin_yc) name "centerCenter" "R0" "roman" pin_h )
+        else
+            obj=dbCreateLabel( cv layer list(pin_xc pin_yc) name "centerCenter" "R90" "roman" pin_w )
+        ); if
+    obj
+    );let
+);procedure
+
+; create a figure group
+procedure( _laygo2_generate_figgroup( cv name origin orient obj_list )
+    let( (grp obj) 
+        grp=dbCreateFigGroup(cv name nil origin orient)
+        foreach( obj obj_list 
+            dbAddFigToFigGroup( grp obj)
+        );foreach
+        grp
+    );let
+);procedure
+
+; test routine
+let( (_laygo2_test cv)
+    _laygo2_test = nil
+    if( _laygo2_test then
+
+        libname="test2"
+        tech_libname="testtech"
+        cellname="test"
+        viewname="layout"
+
+        name="MYINST0"
+        inst_libname="test"
+        inst_cellname="mytest"
+        inst_viewname="layout"
+        loc = list(10 20)
+        orient="R0"
+        num_rows=2
+        num_cols=3
+        sp_rows=2
+        sp_cols=1
+        params=nil
+        params_order=nil
+
+        rect_layer = list("M2" "drawing")
+        rect_bbox = list(list(-5 -10) list(5 10))
+
+        pin_name = "mypin"
+        pin_layer = list("M2" "pin")
+        pin_bbox = list(list(5 -10) list(15 10))
+
+        _laygo2_reset_library(libname tech_libname)
+        cv = _laygo2_open_layout(libname cellname viewname)
+        _laygo2_generate_instance( cv name inst_libname inst_cellname inst_viewname loc orient num_rows num_cols sp_rows
+                                sp_cols params params_order )
+        _laygo2_generate_rect( cv rect_layer rect_bbox )
+        _laygo2_generate_pin( cv, pin_name, pin_layer, pin_bbox)
+        _laygo2_save_and_close_layout(cv)
+    );if
+);let
+
+
+; exporting test_logic__inv_2x
+cv = _laygo2_open_layout("test_logic" "inv_2x" "layout")
+_laygo2_generate_figgroup(cv, "MN0" list( 0.0000  0.0000  ) "R0" list( 
+_laygo2_generate_instance(cv, "MN0_bndl", "gpdk045_microtemplates_dense", "nmos4_fast_boundary", "layout", list( 0.0000  0.0000  ), "R0", 1, 1, 1.0000 , 0.2050 , nil, nil, nil) ; for the Instance object MN0_bndl 
+_laygo2_generate_instance(cv, "MN0_bndr", "gpdk045_microtemplates_dense", "nmos4_fast_boundary", "layout", list( 0.6150  0.0000  ), "R0", 1, 1, 1.0000 , 0.2050 , nil, nil, nil) ; for the Instance object MN0_bndr 
+_laygo2_generate_instance(cv, "MN0_core", "gpdk045_microtemplates_dense", "nmos4_fast_center_nf2", "layout", list( 0.2050  0.0000  ), "R0", 1, 1, 1.0000 , 0.4100 , nil, nil, nil) ; for the Instance object MN0_core 
+_laygo2_generate_instance(cv, "MN0_VIA_G", "gpdk045_microtemplates_dense", "via_M1_M2_0", "layout", list( 0.4100  0.7900  ), "R0", 1, 1, 0.0010 , 0.0010 , nil, nil, nil) ; for the Instance object MN0_VIA_G 
+_laygo2_generate_instance(cv, "MN0_VIA_D", "gpdk045_microtemplates_dense", "via_M1_M2_0", "layout", list( 0.4100  0.4900  ), "R0", 1, 1, 0.0010 , 0.0010 , nil, nil, nil) ; for the Instance object MN0_VIA_D 
+_laygo2_generate_rect(cv, list( "Metal2" "drawing" ), list( list( 0.2500  0.7500  ) list( 0.5700  0.8300  ) ), "not MPT", "not assigned") ; for the Rect object MN0_RG0 
+_laygo2_generate_rect(cv, list( "Metal2" "drawing" ), list( list( 0.2500  0.4500  ) list( 0.5700  0.5300  ) ), "not MPT", "not assigned") ; for the Rect object MN0_RD0 
+_laygo2_generate_rect(cv, list( "Metal2" "drawing" ), list( list( -0.1200  -0.1200  ) list( 0.9400  0.1200  ) ), "not MPT", "not assigned") ; for the Rect object MN0_RRAIL0 
+_laygo2_generate_rect(cv, list( "Metal1" "drawing" ), list( list( 0.1650  -0.0400  ) list( 0.2450  0.5300  ) ), "not MPT", "not assigned") ; for the Rect object MN0_RECT_TIE0 
+_laygo2_generate_instance(cv, "MN0_VIA_TIE0", "gpdk045_microtemplates_dense", "via_M1_M2_1", "layout", list( 0.2050  0.0000  ), "R0", 1, 1, 0, 0, nil, nil, nil) ; for the Instance object MN0_VIA_TIE0 
+_laygo2_generate_rect(cv, list( "Metal1" "drawing" ), list( list( 0.5750  -0.0400  ) list( 0.6550  0.5300  ) ), "not MPT", "not assigned") ; for the Rect object MN0_RECT_TIE1 
+_laygo2_generate_instance(cv, "MN0_VIA_TIE1", "gpdk045_microtemplates_dense", "via_M1_M2_1", "layout", list( 0.6150  0.0000  ), "R0", 1, 1, 0, 0, nil, nil, nil) ; for the Instance object MN0_VIA_TIE1 
+_laygo2_generate_rect(cv, list( "Metal2" "drawing" ), list( list( 0.0850  -0.1200  ) list( 0.7350  0.1200  ) ), "not MPT", "not assigned") ; for the Rect object MN0_RECT_TIE2 
+)); for the Virtualinstance object MN0 
+_laygo2_generate_figgroup(cv, "MP0" list( 0.0000  2.0000  ) "MX" list( 
+_laygo2_generate_instance(cv, "MP0_bndl", "gpdk045_microtemplates_dense", "pmos4_fast_boundary", "layout", list( 0.0000  2.0000  ), "MX", 1, 1, 1.0000 , 0.2050 , nil, nil, nil) ; for the Instance object MP0_bndl 
+_laygo2_generate_instance(cv, "MP0_bndr", "gpdk045_microtemplates_dense", "pmos4_fast_boundary", "layout", list( 0.6150  2.0000  ), "MX", 1, 1, 1.0000 , 0.2050 , nil, nil, nil) ; for the Instance object MP0_bndr 
+_laygo2_generate_instance(cv, "MP0_core", "gpdk045_microtemplates_dense", "pmos4_fast_center_nf2", "layout", list( 0.2050  2.0000  ), "MX", 1, 1, 1.0000 , 0.4100 , nil, nil, nil) ; for the Instance object MP0_core 
+_laygo2_generate_instance(cv, "MP0_VIA_G", "gpdk045_microtemplates_dense", "via_M1_M2_0", "layout", list( 0.4100  1.2100  ), "MX", 1, 1, 0.0010 , 0.0010 , nil, nil, nil) ; for the Instance object MP0_VIA_G 
+_laygo2_generate_instance(cv, "MP0_VIA_D", "gpdk045_microtemplates_dense", "via_M1_M2_0", "layout", list( 0.4100  1.5100  ), "MX", 1, 1, 0.0010 , 0.0010 , nil, nil, nil) ; for the Instance object MP0_VIA_D 
+_laygo2_generate_rect(cv, list( "Metal2" "drawing" ), list( list( 0.2500  1.1700  ) list( 0.5700  1.2500  ) ), "not MPT", "not assigned") ; for the Rect object MP0_RG0 
+_laygo2_generate_rect(cv, list( "Metal2" "drawing" ), list( list( 0.2500  1.4700  ) list( 0.5700  1.5500  ) ), "not MPT", "not assigned") ; for the Rect object MP0_RD0 
+_laygo2_generate_rect(cv, list( "Metal2" "drawing" ), list( list( -0.1200  1.8800  ) list( 0.9400  2.1200  ) ), "not MPT", "not assigned") ; for the Rect object MP0_RRAIL0 
+_laygo2_generate_rect(cv, list( "Metal1" "drawing" ), list( list( 0.1650  1.4700  ) list( 0.2450  2.0400  ) ), "not MPT", "not assigned") ; for the Rect object MP0_RECT_TIE0 
+_laygo2_generate_instance(cv, "MP0_VIA_TIE0", "gpdk045_microtemplates_dense", "via_M1_M2_1", "layout", list( 0.2050  2.0000  ), "MX", 1, 1, 0, 0, nil, nil, nil) ; for the Instance object MP0_VIA_TIE0 
+_laygo2_generate_rect(cv, list( "Metal1" "drawing" ), list( list( 0.5750  1.4700  ) list( 0.6550  2.0400  ) ), "not MPT", "not assigned") ; for the Rect object MP0_RECT_TIE1 
+_laygo2_generate_instance(cv, "MP0_VIA_TIE1", "gpdk045_microtemplates_dense", "via_M1_M2_1", "layout", list( 0.6150  2.0000  ), "MX", 1, 1, 0, 0, nil, nil, nil) ; for the Instance object MP0_VIA_TIE1 
+_laygo2_generate_rect(cv, list( "Metal2" "drawing" ), list( list( 0.0850  1.8800  ) list( 0.7350  2.1200  ) ), "not MPT", "not assigned") ; for the Rect object MP0_RECT_TIE2 
+)); for the Virtualinstance object MP0 
+_laygo2_generate_rect(cv, list( "Metal2" "drawing" ), list( list( 0.1650  0.7500  ) list( 0.4500  0.8300  ) ), "not MPT", "not assigned") ; for the Rect object NoName_0 
+_laygo2_generate_instance(cv, "NoName_1", "gpdk045_microtemplates_dense", "via_M2_M3_0", "layout", list( 0.2050  0.7900  ), "R0", 1, 1, 0, 0, nil, nil, nil) ; for the Instance object NoName_1 
+_laygo2_generate_rect(cv, list( "Metal2" "drawing" ), list( list( 0.1650  1.1700  ) list( 0.4500  1.2500  ) ), "not MPT", "not assigned") ; for the Rect object NoName_2 
+_laygo2_generate_instance(cv, "NoName_3", "gpdk045_microtemplates_dense", "via_M2_M3_0", "layout", list( 0.2050  1.2100  ), "R0", 1, 1, 0, 0, nil, nil, nil) ; for the Instance object NoName_3 
+_laygo2_generate_rect(cv, list( "Metal3" "drawing" ), list( list( 0.1650  0.7500  ) list( 0.2450  1.2500  ) ), "not MPT", "not assigned") ; for the Rect object NoName_4 
+_laygo2_generate_instance(cv, "NoName_5", "gpdk045_microtemplates_dense", "via_M2_M3_0", "layout", list( 0.4100  0.4900  ), "R0", 1, 1, 0, 0, nil, nil, nil) ; for the Instance object NoName_5 
+_laygo2_generate_rect(cv, list( "Metal3" "drawing" ), list( list( 0.3700  0.4500  ) list( 0.4500  1.5500  ) ), "not MPT", "not assigned") ; for the Rect object NoName_6 
+_laygo2_generate_instance(cv, "NoName_7", "gpdk045_microtemplates_dense", "via_M2_M3_0", "layout", list( 0.4100  1.5100  ), "R0", 1, 1, 0, 0, nil, nil, nil) ; for the Instance object NoName_7 
+_laygo2_generate_rect(cv, list( "Metal2" "drawing" ), list( list( -0.1200  -0.1200  ) list( 0.9400  0.1200  ) ), "not MPT", "not assigned") ; for the Rect object NoName_8 
+_laygo2_generate_rect(cv, list( "Metal2" "drawing" ), list( list( -0.1200  1.8800  ) list( 0.9400  2.1200  ) ), "not MPT", "not assigned") ; for the Rect object NoName_9 
+_laygo2_generate_pin(cv, "VSS:", list( "Metal2" "pin" ), list( list( 0.0000  -0.1200  ) list( 0.8200  0.1200  ) ) ) ; for the Pin object VSS: 
+_laygo2_generate_pin(cv, "VDD:", list( "Metal2" "pin" ), list( list( 0.0000  1.8800  ) list( 0.8200  2.1200  ) ) ) ; for the Pin object VDD: 
+_laygo2_generate_pin(cv, "I", list( "Metal3" "pin" ), list( list( 0.1650  0.7900  ) list( 0.2450  1.2100  ) ) ) ; for the Pin object I 
+_laygo2_generate_pin(cv, "O", list( "Metal3" "pin" ), list( list( 0.3700  0.4900  ) list( 0.4500  1.5100  ) ) ) ; for the Pin object O 
+_laygo2_save_and_close_layout(cv)

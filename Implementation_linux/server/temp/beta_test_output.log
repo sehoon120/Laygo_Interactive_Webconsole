@@ -1,0 +1,11 @@
+[INFO] 실행 중: /WORK/laygo_web_console/Implementation_linux/temp_code/beta_test_temp.py
+[DEBUG] 현재실행경로: 
+/WORK/laygo_web_console/Implementation_linux/server
+USERNAME: beta
+FILENAME: test
+RUNDIR: /WORK/laygo_web_console/Implementation_linux/server
+CODE_PATH: /WORK/laygo_web_console/Implementation_linux/temp_code/beta_test_temp.py
+Traceback (most recent call last):
+  File "/WORK/laygo_web_console/Implementation_linux/temp_code/beta_test_temp.py", line 1, in <module>
+    test
+NameError: name 'test' is not defined

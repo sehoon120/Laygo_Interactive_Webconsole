@@ -1,0 +1,119 @@
+<%- include('./include/_header') %>
+
+<%
+  // 날짜 포맷 헬퍼 함수 추가 (헤더 바로 아래에 삽입)
+  function formatDate(date) {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const day = ('0' + d.getDate()).slice(-2);
+    const hour = ('0' + d.getHours()).slice(-2);
+    const minute = ('0' + d.getMinutes()).slice(-2);
+    const second = ('0' + d.getSeconds()).slice(-2);
+    return `${year}-${month}-${day}  ${hour}:${minute}:${second}`;
+  }
+%>
+
+<!-- Main -->
+<main id="site-main">
+  <!-- <div class="button-box">
+    <a href="/main/add" class="btn btn-light"><i class="fa-solid fa-file-circle-plus"></i>파일 추가</a>
+  </div> -->
+  <div class="button-box">
+    <a href="/main/add?path=<%= currentPath %>" class="btn btn-light">
+      <i class="fa-solid fa-file-circle-plus"></i>Add File
+    </a>
+    <!-- <a href="/main/add-directory" class="btn btn-light">
+      <i class="fa-solid fa-folder-plus"></i>Add Dir
+    </a> -->
+  </div>
+  
+<!-- 실험적 기능 -->
+  <!-- 디렉토리 네비게이션 메뉴 예시 -->
+  <nav class="directory-nav" style="margin: 1em 0;">
+    <!-- Root 아이콘: 집 모양 -->
+    <a href="/main?path=/">
+      <i class="fas fa-house"></i> <!-- 집 모양 아이콘 -->
+    </a>
+    <!-- Parent 아이콘: 위쪽 방향 화살표 -->
+    <a href="#" id="parent-folder">
+      <i class="fas fa-arrow-up"></i> <!-- 위쪽 방향 화살표 아이콘 -->
+    </a>
+    <!-- 현재 경로 출력 -->
+    <span>
+      <i class="fas fa-desktop"></i> <!-- 컴퓨터 아이콘 -->
+      <%= currentPath %> <!-- 현재 경로 출력 -->
+    </span>
+  </nav>
+  
+  
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const parentFolderLink = document.getElementById("parent-folder");
+      const currentPath = "<%= currentPath %>"; // 현재 경로 가져오기
+  
+      function getParentPath(path) {
+        if (path === "/" || path === "") return "/"; // 최상위 폴더 예외 처리
+        let parts = path.split("/").filter(part => part.length > 0); // '/' 기준으로 분할, 빈 요소 제거
+        parts.pop(); // 마지막 요소 제거 (현재 폴더명)
+        ff = "/" + parts.join("/") + "/"; // 다시 '/'를 붙여 상위 경로 생성
+        if (ff === "//") return "/";
+        return ff;
+      }
+  
+      parentFolderLink.addEventListener("click", function(event) {
+        event.preventDefault();
+        const parentPath = getParentPath(currentPath);
+        window.location.href = "/main?path=" + encodeURIComponent(parentPath);
+      });
+    });
+  </script>
+  
+
+
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>이름</th>
+        <th>유형</th>
+        <th style="padding-right: 20px; text-align: right;">수정한 날짜</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% files.forEach(file => { %>
+      <tr>
+        <td><%= file.filename %></td>
+        <td><%= file.filetype %></td>
+        <!-- formatDate 함수를 사용하여 날짜 포맷 출력 -->
+        <td style="padding-right: 20px; text-align: right;"><%= formatDate(file.updatedAt) %></td>
+        
+        <td>
+          <a href="/main/<%= file._id %>/edit?path=<%= encodeURIComponent(currentPath) %>" class="btn edit" title="<%= file.filetype === 'dir' ? '폴더' : '수정' %>">
+            <i class="fas <%= file.filetype === 'dir' ? 'fa-folder' : 'fa-pencil-alt' %>"></i>
+          </a>
+          
+          
+          <a href="/main/<%= file._id %>?path=<%= encodeURIComponent(currentPath) %>" class="btn update" title="설정">
+            <i class="fas fa-cog"></i>
+          </a>
+          
+
+          <form action="/main/<%= file._id %>?_method=DELETE&path=<%= currentPath %>" method="POST" style="display: inline" onsubmit="return confirm('Are you sure to delete \' <%= file.filename %>.<%= file.filetype %> at <%= currentPath %> \'?');">
+            <input type="submit" class="btn-delete" title="삭제" value="X">
+          </form>          
+
+          <!-- <form action="/main/<%= file._id %>?_method=DELETE" method="POST" style="display: inline">
+            <input type="submit" class="btn-delete" title="삭제" value="X">
+          </form> -->
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</main>
+<!-- /Main -->
+
+<%- include('./include/_footer') %>

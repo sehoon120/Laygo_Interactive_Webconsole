@@ -1,0 +1,57 @@
+<%- include('./include/_header') %>
+
+<!-- Main -->
+<main id="site-main">
+  <div class="button-box">        
+    <a href="/main?path=<%= currentPath %>" class="btn btn-light">
+      <i class="fa-solid fa-list"></i>파일 목록
+    </a>
+  </div>
+  <h2>파일 추가</h2>          
+  <p>새로운 파일을 추가합니다.</p>
+  <p>파일명에는 /, . 포함이 불가능합니다.</p>
+  <!-- action URL에 currentPath를 쿼리 파라미터로 전달 -->
+  <form action="/main/add?path=<%= currentPath %>" method="POST" enctype="multipart/form-data" id="add-user">
+    <div class="user-info">
+      <div class="col-12">
+        <label for="filename" class="col-form-label">이름(File Name)</label>
+        <div>
+          <input type="text" class="form-control" name="filename" id="filename" placeholder="Generator">
+        </div>
+      </div>
+      <div class="col-12">
+        <label for="filetype" class="col-form-label">유형(File Type)</label>
+        <div>
+          <input type="text" class="form-control" name="filetype" id="filetype" placeholder="py">
+        </div>
+      </div>
+      <!-- 파일 업로드 영역 추가 -->
+      <div class="col-12 mt-3">
+        <label for="uploadFile" class="col-form-label">파일 업로드</label>
+        <div>
+          <input type="file" class="form-control" name="uploadFile" id="uploadFile">
+        </div>
+      </div>
+      <button type="submit">저장</button>
+    </div>
+  </form>   
+</main>
+<!-- /Main -->
+
+<script>
+  document.getElementById("uploadFile").addEventListener("change", function(){
+    var file = this.files[0];
+    if(file) {
+      var fileName = file.name;
+      var dotIndex = fileName.lastIndexOf(".");
+      if(dotIndex > 0) {
+        var name = fileName.substring(0, dotIndex);
+        var ext = fileName.substring(dotIndex + 1);
+        document.getElementById("filename").value = name;
+        document.getElementById("filetype").value = ext;
+      }
+    }
+  });
+</script>
+
+<%- include('./include/_footer') %>

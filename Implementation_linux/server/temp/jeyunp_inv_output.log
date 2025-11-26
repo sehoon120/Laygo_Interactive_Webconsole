@@ -1,0 +1,79 @@
+[INFO] 실행 중: /WORK/laygo_web_console/Implementation_linux/temp_code/jeyunp_inv_temp.py
+[DEBUG] 현재실행경로: 
+/WORK/laygo_web_console/Implementation_linux/server
+USERNAME: jeyunp
+FILENAME: inv
+RUNDIR: /WORK/laygo_web_console/Implementation_linux/server
+CODE_PATH: /WORK/laygo_web_console/Implementation_linux/temp_code/jeyunp_inv_temp.py
+Load templates
+webconsole mode
+/templates/test_big_templates.yaml
+Load grids
+--------------------
+Creating inv_2x
+Create instances
+Create wires
+=========== SUPPLY RAIL GENERATION START ===========
+
+The number of rails of your design is 1.
+The number of pins of your design is 2.
+
+Iterated nets:
+0. "VSS"
+1. "VDD"
+
+============ SUPPLY RAIL GENERATION END ============
+Export design
+
+webconsole mode
+--------------------
+Creating inv_4x
+Create instances
+Create wires
+=========== SUPPLY RAIL GENERATION START ===========
+
+The number of rails of your design is 1.
+The number of pins of your design is 2.
+
+Iterated nets:
+0. "VSS"
+1. "VDD"
+
+============ SUPPLY RAIL GENERATION END ============
+Export design
+
+webconsole mode
+--------------------
+Creating inv_6x
+Create instances
+Create wires
+=========== SUPPLY RAIL GENERATION START ===========
+
+The number of rails of your design is 1.
+The number of pins of your design is 2.
+
+Iterated nets:
+0. "VSS"
+1. "VDD"
+
+============ SUPPLY RAIL GENERATION END ============
+Export design
+
+webconsole mode
+--------------------
+Creating inv_8x
+Create instances
+Create wires
+=========== SUPPLY RAIL GENERATION START ===========
+
+The number of rails of your design is 1.
+The number of pins of your design is 2.
+
+Iterated nets:
+0. "VSS"
+1. "VDD"
+
+============ SUPPLY RAIL GENERATION END ============
+Export design
+
+webconsole mode

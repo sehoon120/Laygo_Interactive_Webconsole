@@ -1,0 +1,29 @@
+[INFO] 실행 중: /WORK/laygo_web_console/Implementation_linux/temp_code/alpha_generator_temp.py
+[DEBUG] 현재실행경로: 
+/WORK/laygo_web_console/Implementation_linux/server
+USERNAME: alpha
+FILENAME: generator
+RUNDIR: /WORK/laygo_web_console/Implementation_linux/server
+CODE_PATH: /WORK/laygo_web_console/Implementation_linux/temp_code/alpha_generator_temp.py
+Load templates
+Load grids
+--------------------
+Creating inv_2x
+Create instances
+Create wires
+=========== SUPPLY RAIL GENERATION START ===========
+
+The number of rails of your design is 1.
+The number of pins of your design is 2.
+
+Iterated nets:
+0. "VSS"
+1. "VDD"
+
+============ SUPPLY RAIL GENERATION END ============
+Export design
+
+Traceback (most recent call last):
+  File "/WORK/laygo_web_console/Implementation_linux/temp_code/alpha_generator_temp.py", line 101, in <module>
+    laygo2.export_template(nat_temp, filename=f"{export_path}{libname}_templates.yaml", mode='append', username='jeyunp')
+TypeError: export_template() got an unexpected keyword argument 'username'

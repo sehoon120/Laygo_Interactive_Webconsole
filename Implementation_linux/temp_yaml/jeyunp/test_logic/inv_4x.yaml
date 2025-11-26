@@ -1,0 +1,147 @@
+bbox:
+- [0, 0]
+- [1230, 2000]
+cellname: inv_4x
+flatten:
+  metals: []
+  subblocks: []
+  vias: []
+libname: test_logic
+metals:
+- layer: Metal2
+  xy:
+  - [165, 750]
+  - [655, 830]
+- layer: Metal2
+  xy:
+  - [165, 1170]
+  - [655, 1250]
+- layer: Metal3
+  xy:
+  - [165, 750]
+  - [245, 1250]
+- layer: Metal3
+  xy:
+  - [780, 450]
+  - [860, 1550]
+- layer: Metal2
+  xy:
+  - [-120, -120]
+  - [1350, 120]
+- layer: Metal2
+  xy:
+  - [-120, 1880]
+  - [1350, 2120]
+pins:
+- bbox:
+  - [0, -120]
+  - [1230, 120]
+  layer: Metal2
+  name: 'VSS:'
+  xy:
+  - [0, -120]
+  - [1230, 120]
+- bbox:
+  - [0, 1880]
+  - [1230, 2120]
+  layer: Metal2
+  name: 'VDD:'
+  xy:
+  - [0, 1880]
+  - [1230, 2120]
+- bbox:
+  - [165, 790]
+  - [245, 1210]
+  layer: Metal3
+  name: I
+  xy:
+  - [165, 790]
+  - [245, 1210]
+- bbox:
+  - [780, 490]
+  - [860, 1510]
+  layer: Metal3
+  name: O
+  xy:
+  - [780, 490]
+  - [860, 1510]
+subblocks:
+- bbox:
+  - [0, 0]
+  - [1230, 1000]
+  cellname: myvcell_MN0
+  libname: gpdk045_microtemplates_dense
+  name: MN0
+  pins:
+    D0:
+      bbox:
+      - [370, 235]
+      - [450, 595]
+      termName: D0
+    G0:
+      bbox:
+      - [320, 730]
+      - [500, 850]
+      termName: G0
+    S0:
+      bbox:
+      - [165, 235]
+      - [245, 595]
+      termName: S0
+    S1:
+      bbox:
+      - [575, 235]
+      - [655, 595]
+      termName: S1
+  transform: R0
+  xy: [0, 0]
+- bbox:
+  - [0, 1000]
+  - [1230, 2000]
+  cellname: myvcell_MP0
+  libname: gpdk045_microtemplates_dense
+  name: MP0
+  pins:
+    D0:
+      bbox:
+      - [370, 235]
+      - [450, 595]
+      termName: D0
+    G0:
+      bbox:
+      - [320, 730]
+      - [500, 850]
+      termName: G0
+    S0:
+      bbox:
+      - [165, 235]
+      - [245, 595]
+      termName: S0
+    S1:
+      bbox:
+      - [575, 235]
+      - [655, 595]
+      termName: S1
+  transform: MX
+  xy: [0, 2000]
+vias:
+- bbox:
+  - [165, 750]
+  - [245, 830]
+  layer: [Metal2, Metal3]
+  xy: [205, 790]
+- bbox:
+  - [165, 1170]
+  - [245, 1250]
+  layer: [Metal2, Metal3]
+  xy: [205, 1210]
+- bbox:
+  - [780, 450]
+  - [860, 530]
+  layer: [Metal2, Metal3]
+  xy: [820, 490]
+- bbox:
+  - [780, 1470]
+  - [860, 1550]
+  layer: [Metal2, Metal3]
+  xy: [820, 1510]

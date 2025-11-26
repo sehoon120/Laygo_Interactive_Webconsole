@@ -1,0 +1,413 @@
+
+
+/* ====================================================================== */
+/* 기본 리셋 및 공통 스타일 (기존 코드)                    */
+/* ====================================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: #222;
+}
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 15px;
+  position: relative;
+}
+
+header .login-box {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.border-shadow {
+  border:1px solid #eee;
+  box-shadow: 1px 3px 10px #ccc;
+}
+.text-center {
+  text-align: center;
+}
+
+header {
+  width: 100%;
+}
+header nav {
+  width: 100%;
+  padding: 1em 0;
+}
+
+header nav a {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+/* 전체 h2에 적용 */
+h2 {
+  font-family: "Arial", sans-serif;
+  font-weight: bold;   /* 글씨 두께 */
+  font-size: 20px;     /* 크기 */
+  color: #333;         /* 색상 */
+}
+
+span {
+  font-family: "Arial", sans-serif;
+  font-weight: bold;   /* 글씨 두께 */
+  font-size: 20px;     /* 크기 */
+  color: #333;         /* 색상 */
+}
+
+body {
+  font-family: "Arial", "Noto Sans KR", sans-serif;
+}
+
+/* 공통 메시지 박스는 기본적으로 보이게 */
+.msg-box { opacity: 1; transition: opacity .5s; }
+/* 저장용(#message-save)만 페이드아웃 대상 */
+#message-save.fade-out { opacity: 0; }
+/* 드로우용은 항상 보이게 (혹시 전역 규칙이 있으면 이걸로 덮어쓰기) */
+#message-draw { opacity: 1 !important; }
+
+/* ====================================================================== */
+/* 리스트 및 버튼 섹션 (기존 코드)                  */
+/* ====================================================================== */
+#site-main {
+  width: 1600px;
+  margin: 6em auto 0;
+}
+.button-box {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.button-box > a {
+  font-size: 1em;
+  padding: .5em 1em;
+}
+
+.button-box i {
+  margin-right: .5em;
+}
+
+#site-main .container form {
+  margin: 2em 0;
+}
+
+td .btn {
+  color: #ccc;
+}
+
+/* ====================================================================== */
+/* 반응형 테이블 (기존 코드)                        */
+/* ====================================================================== */
+@media only screen and (max-width: 800px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  tr {
+    border: 1px solid #ddd;
+  }
+
+  td {
+    border: none;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+  }
+}
+
+/* ====================================================================== */
+/* 추가 및 로그인 폼 (기존 코드)                    */
+/* ====================================================================== */
+#site-main h2 {
+  font-size: 1.6em;
+  margin-bottom: 1em;
+  text-align: center;
+}
+#site-main p {
+  color: #aaa;
+  font-size: 1em;
+  margin: 1em auto 2em;
+  text-align: center;
+}
+
+.user-info {
+  max-width: 620px;
+  margin: auto;
+}
+
+.user-info input[type="text"] {
+  width: 100%;
+  padding: .6em 1em;
+  margin: .5em 0;
+  border: 1px solid #ddd;
+  font-size: 1em;
+  border-radius: .2em;
+}
+
+#site-main form button:not([class="login-btn"]) {
+  margin-top: 1em;
+  width: 100%;
+  padding: .5em 0;
+  background-color: #eee;
+  border:1px solid #ddd;
+  transition: background-color .5s ease;
+}
+
+#site-main form button:hover {
+  background-color: #222;
+  color: #fff;
+}
+
+.login,
+.register {
+  width: 80%;
+  margin: 30px auto;
+}
+.login label,
+.register label {
+  visibility: hidden;
+}
+.login input,
+.register input {
+  display: block;
+  width: 60%;
+  padding: 10px;
+  margin-top: 25px;
+  font-size: 15px;
+  border: none;
+  outline: none;
+  border-bottom: 2px solid #eee;
+}
+.login-btn,
+.register-btn {
+  border:none;
+}
+
+hr {
+  border: none;
+  margin-top: 30px;
+}
+
+/* ====================================================================== */
+/* 뒤로가기 및 디렉토리 (기존 코드)                   */
+/* ====================================================================== */
+.back-button {
+  position: absolute;
+  top: 0px;
+  left: 20px;
+  font-size: 1.2em;
+  color: #333;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 5px;
+}
+
+.back-button i {
+  font-size: 2em;
+}
+
+.directory-nav a {
+  font-size: 1.5em;
+  color: #333;
+  text-decoration: none;
+  margin-right: 20px;
+  transition: color 0.3s ease;
+}
+
+.directory-nav a:hover {
+  color: #007bff;
+}
+
+/* ====================================================================== */
+/* 전화번호 인증 (기존 코드)                        */
+/* ====================================================================== */
+.phone-verification,
+.code-confirmation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 60%;
+  margin-top: 25px;
+}
+
+.phone-verification input,
+.code-confirmation input {
+  padding: 10px;
+  font-size: 15px;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #eee;
+  flex: 1;
+}
+
+.verify-btn {
+  border: none;
+  flex: 0 0 33.33%;
+  margin-left: 10px;
+  margin-top: 25px;
+}
+
+/* ====================================================================== */
+/* 스타일리시 토글 버튼 (새로운 코드)                     */
+/* ====================================================================== */
+:root {
+  --primary-color: #3f51b5;
+  --primary-light-color: #7986cb;
+  --off-color: #e0e0e0;
+  --off-text-color: #888;
+  --on-gradient: linear-gradient(135deg, var(--primary-color), #5c6bc0);
+  --transition-speed: 0.3s;
+}
+
+.layer-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.layer-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  height: 38px; /* 높이 고정 */
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  user-select: none;
+}
+
+.layer-btn.off {
+  background-color: var(--off-color);
+  color: var(--off-text-color);
+}
+
+.layer-btn.on {
+  background: var(--on-gradient);
+  color: white;
+  box-shadow: 0 6px 15px rgba(63, 81, 181, 0.3);
+  transform: translateY(-2px);
+}
+
+.layer-btn:not(.on):hover {
+  transform: translateY(-2px);
+  background-color: #d1d3d6;
+}
+
+.layer-btn.on.pulse {
+  animation: pulse-shadow 1.5s infinite;
+}
+
+@keyframes pulse-shadow {
+  0% {
+    box-shadow: 0 6px 15px rgba(63, 81, 181, 0.3);
+  }
+  50% {
+    box-shadow: 0 8px 20px rgba(63, 81, 181, 0.5);
+  }
+  100% {
+    box-shadow: 0 6px 15px rgba(63, 81, 181, 0.3);
+  }
+}
+.layer-btn.wide-btn {
+  width: auto;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+/* 새로 추가된 스타일 */
+.layer-group-title {
+    font-weight: 700;
+    font-size: 16px;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-right: 8px;
+    align-self: center; /* Flexbox 내에서 세로 중앙 정렬 */
+}
+
+
+/* Save and Layout Draw 버튼을 위한 스타일 */
+.btn-primary,
+.btn-secondary {
+  border-radius: 50px;
+  font-weight: 600;
+  padding: 10px 24px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-primary {
+  background-color: #4a90e2;
+  border: none;
+  color: #333;
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.25);
+}
+
+.btn-primary:hover {
+  background-color: #357ab8;
+  box-shadow: 0 6px 18px rgba(74, 144, 226, 0.35);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  color: #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.btn-secondary:hover {
+  background-color: #f0f0f0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+
+/* 세련된 텍스트 영역을 위한 스타일 */
+textarea.form-control {
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  padding: 12px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  min-height: 250px; /* 적당한 최소 높이 설정 */
+}
+
+textarea.form-control:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.15);
+}
+
+textarea.form-control::placeholder {
+  color: #aaa;
+  font-style: italic;
+}

@@ -3,23 +3,20 @@
 #!/usr/bin/env bash
 
 # 우분투 터미널 기준
-export PYTHONPATH="/mnt/c/For_english_only_directories/LaygoWebConsole/bag_workspace_gpdk045:$PYTHONPATH"
-export PYTHONPATH="/mnt/c/For_english_only_directories/LaygoWebConsole/bag_workspace_gpdk045/laygo2:$PYTHONPATH"
-export WC="/mnt/c/For_english_only_directories/LaygoWebConsole/laygo_web_console/Implementation/temp_yaml"
-export DB_CONNECT="mongodb+srv://testjy:SkLXpEKwxl7uaQKc@cluster0.y07fyca.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+export PYTHONPATH="(Type your bag_workspace_gpdk045 directory path):$PYTHONPATH"
+export PYTHONPATH="(Type your bag_workspace_gpdk045 directory path)/laygo2:$PYTHONPATH"
+export WC="(Type your laygo_web_console directory path)/Implementation_linux/temp_yaml"
+export DB_CONNECT="(Type your mongoDB address)"
 unset SESSION_MANAGER
 
 # 우분투 콘다 Laygo 경로
-#BAG_PYTHON="/home/happy/anaconda3/envs/Laygo/bin/python3.7"
-#
 
 USERNAME="$1"   #User of webconsole
 FILENAME="$2"   #Filename(with path and without extension) of script
 CODE_PATH="$3"  #Location of temporal script file for execution
 RUNDIR="$4";    #Location of server
 
-export LAYGO_USERNAME="$USERNAME"
-#export LAYGO_BASENAME="$FILENAME"           
+export LAYGO_USERNAME="$USERNAME"          
 
 # 로그 생성버전
 # 로그 디렉토리 만들기
